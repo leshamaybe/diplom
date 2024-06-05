@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  username          String             @unique
+  first_name        String?
+  password          String
+  conversations     Conversation[]
+  messages          Message[]
+  groups            Group[]
+  bio               String?
+  settings          Settings?
+  phone             String?
+  email             String?
+  sortName          String?
+  token             Token?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime?          @updatedAt
+  reactions         Reaction[]
+  // userConversations UserConversation[]
+}
+
+model Settings {
+  id                    Int    @id @default(autoincrement())
+  user_id               Int    @unique
+  user                  User   @relation(fields: [user_id], references: [id])
+  theme                 String @default("light")
+  timeFormat            String @default("24h")
+  messageTextSize       String @default("16")
+  autoLoadFileMaxSizeMb String @default("5")
+  themes                Json?
+}
+
+model Token {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @unique
+  User         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+}
+
+model Conversation {
+  id               Int                @id @default(autoincrement())
+  messages         Message[]
+  latestMessage_id Int?               @unique
+  latestMessage    Message?           @relation(name: "latestConversationMessage", fields: [latestMessage_id], references: [id])
+  isGroup          Boolean            @default(false)
+  roomName         String?
+  users            User[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime?          @updatedAt
+  // userConversation UserConversation[]
+}
+
+// model UserConversation {
+//   userId         Int
+//   conversationId Int
+//   user           User         @relation(fields: [userId], references: [id])
+//   conversation   Conversation @relation(fields: [conversationId], references: [id])
+//   createdAt      DateTime     @default(now())
+
+//   @@id([userId, conversationId])
+//   @@map("UserConversations")
+// }
+
+model Message {
+  id              Int           @id @default(autoincrement())
+  conversation_id Int
+  conversation    Conversation  @relation(fields: [conversation_id], references: [id])
+  sender_id       Int
+  sender          User          @relation(fields: [sender_id], references: [id])
+  isLatestIn      Conversation? @relation(name: "latestConversationMessage")
+  content         String
+  reactions       Reaction[]
+  groupId         Int?
+  group           Group?        @relation(fields: [groupId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime?     @updatedAt
+}
+
+model Reaction {
+  id        Int          @id @default(autoincrement())
+  user      User         @relation(fields: [userId], references: [id])
+  userId    Int
+  message   Message      @relation(fields: [messageId], references: [id])
+  messageId Int
+  content   ReactionType @default(LIKE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Group {
+  id         Int       @id @default(autoincrement())
+  name String
+  settings   Json?
+  messages   Message[]
+  users      User[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
+}
