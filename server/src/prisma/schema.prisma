@@ -14,7 +14,7 @@ model User {
   email            String?
   sortName         String?
   token            Token?
-  conversations    Conversation[]
+  conversations    UserConversation[]
   messages         Message[]
   groupMemberships GroupMembership[]
   settings         UserSettings?
@@ -51,9 +51,20 @@ model Conversation {
   latestMessage    Message?  @relation(name: "latestConversationMessage", fields: [latestMessage_id], references: [id])
   isGroup          Boolean   @default(false)
   roomName         String?
-  users            User[]
+  users            UserConversation[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime? @updatedAt
+}
+
+model UserConversation {
+  userId         Int
+  conversationId Int
+  user           User         @relation(fields: [userId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  createdAt      DateTime     @default(now())
+
+  @@id([userId, conversationId])
+  @@map("UserConversations")
 }
 
 model Group {
