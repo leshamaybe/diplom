@@ -1,54 +1,41 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import SidebarTools from "./SidebarTools";
-import ChatList from "../../ChatList";
-import Separator from "@/components/Separator";
+import MainScreen from "../sidebar-screens/MainScreen";
 import { useState } from "react";
-import useDebounce from "@/hooks/useDebounce";
-import { cn } from "@/lib/utils";
-import SearchList from "../search/searchList";
-import SidebarBackBtn from "./SidebarBackBtn";
+import FirstScreen from "../sidebar-screens/group-screens/FirstScreen";
+import SecondScreen from "../sidebar-screens/group-screens/SecondScreen";
+import SettingsScreen from "../sidebar-screens/SettingsScreen";
+import ProfileScreen from "../sidebar-screens/ProfileScreen";
+
+export enum ScreenTypes {
+    CreateChannel = "createChannel",
+    CreateGroupFirst = "createGroupFirst",
+    CreateGroupSecond = "createGroupSecond",
+    Settings = "settings",
+    Profile = "profile",
+    Main = "main",
+}
 
 const Sidebar = () => {
-    const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const debouncedSearchTerm = useDebounce(searchTerm, 500);
+    const [screen, setScreen] = useState<ScreenTypes>(ScreenTypes.Main);
 
     return (
-        <div className="flex flex-col w-[420px] min-h-screen h-full bg-background z-10">
-            <div className="flex flex-row items-center px-4 min-h-[3.5rem]">
-                {isSearchActive ? (
-                    <SidebarBackBtn handler={() => setIsSearchActive(false)} />
-                ) : (
-                    <SidebarTools isSearchActive={isSearchActive} />
-                )}
-                <Input
-                    onClick={() => setIsSearchActive(true)}
-                    className="w-full rounded-3xl ml-2"
-                    type="search"
-                    placeholder="Поиск"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
-            <Separator />
-            <div className="h-full pt-2 overflow-y-auto overflow-x-hidden relative">
-                <div
-                    className={cn("block px-2", {
-                        hidden: isSearchActive,
-                    })}
-                >
-                    <ChatList />
-                </div>
-                <div
-                    className={cn("hidden w-full px-2", {
-                        "block animate-zoom-fade absolute": isSearchActive,
-                    })}
-                >
-                    <SearchList searchTerm={debouncedSearchTerm} />
-                </div>
-            </div>
+        <div className="relative flex flex-col lg:min-w-[420px] w-[420px] min-h-screen h-full bg-[rgb(244,244,245)] z-10">
+            {screen === ScreenTypes.Main && (
+                <MainScreen setScreen={setScreen} />
+            )}
+            {screen === ScreenTypes.CreateGroupFirst && (
+                <FirstScreen setScreen={setScreen} />
+            )}
+            {screen === ScreenTypes.CreateGroupSecond && (
+                <SecondScreen setScreen={setScreen} />
+            )}
+            {screen === ScreenTypes.Settings && (
+                <SettingsScreen setScreen={setScreen} />
+            )}
+            {screen === ScreenTypes.Profile && (
+                <ProfileScreen setScreen={setScreen} />
+            )}
         </div>
     );
 };

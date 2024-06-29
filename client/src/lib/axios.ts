@@ -38,9 +38,6 @@ api.interceptors.response.use(
 
                 return api.request(originalRequest);
             } catch (error) {
-                // localStorage.clear();
-                // deleteCookie("accessToken");
-                // window.location.href = "/login";
                 console.log(error);
             }
         }

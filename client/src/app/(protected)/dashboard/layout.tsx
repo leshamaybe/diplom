@@ -1,7 +1,6 @@
 import Sidebar from "@/components/sidebar/sidedbar-left/Sidebar";
 import AuthProvider from "@/components/providers/AuthProvider";
 import SocketProvider from "@/components/providers/SocketProvider";
-import SidebarRight from "@/components/sidebar/sidebar-right/Sidebar";
 
 export default function Layout({
     children,
@@ -9,13 +8,12 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="w-full min-h-screen min-w-full bg-pattern-1">
-            <div className="flex flex-row w-full h-dvh radial-1">
+        <div className="w-full min-h-screen min-w-full">
+            <div className="flex flex-row relative overflow-hidden w-full max-w-[1682px] mx-auto h-dvh radial-1 border border-[rgb(226,232,240)]">
                 <SocketProvider>
                     <AuthProvider>
                         <Sidebar />
                         {children}
-                        <SidebarRight />
                     </AuthProvider>
                 </SocketProvider>
             </div>

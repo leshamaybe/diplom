@@ -10,5 +10,6 @@ router.get(
     authMiddleware,
     controller.getUserByUsername
 );
+router.get("/user/profile", authMiddleware, controller.getUserProfile);
 
 export default router;

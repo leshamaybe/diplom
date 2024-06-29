@@ -40,8 +40,8 @@ const SearchList = ({ searchTerm }: { searchTerm: string }) => {
                                 "relative flex flex-col justify-center w-full min-h-16 rounded-lg pl-[70px] hover:bg-[rgba(112,117,121,0.08)] transition-colors duration-75"
                             )}
                         >
-                            <Avatar username={user.username} />
-                            <div className="w-full">{user.username}</div>
+                            <Avatar className="absolute" username={user.name} />
+                            <div className="w-full">{user?.name}</div>
                         </div>
                     </Link>
                 );

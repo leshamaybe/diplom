@@ -3,8 +3,8 @@ import controller from "../controllers/chat.controller.js";
 const router = new Router();
 
 router.post("/startConversation", controller.startConversation);
-router.post("/sendMessage", controller.sendMessage);
-router.post("/currentChat", controller.getCurrentChat);
-router.get("/allChats", controller.getAllChats);
+router.post("/createConversation", controller.createConversation);
+router.post("/createGroup", controller.createGroup);
+router.get("/conversations", controller.getUserConversations);
 
 export default router;

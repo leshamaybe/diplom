@@ -11,4 +11,7 @@ export default class UserService {
     static async getUserByUsername<T>(username: T): Promise<AxiosResponse> {
         return api.get(`/api/user/username/${username}`);
     }
+    static async getProfile(): Promise<AxiosResponse> {
+        return api.get(`/api/user/profile`);
+    }
 }

@@ -48,7 +48,7 @@ class TokenService {
 
         const user = await prisma.user.findUnique({
             where: {
-                username: username,
+                name: username,
             },
         });
 

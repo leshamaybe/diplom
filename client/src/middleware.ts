@@ -17,8 +17,6 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith("/dashboard") && !refreshToken && !accessToken) {
         const response = NextResponse.redirect(new URL("/login", request.url));
 
-        // response.cookies.delete("accessToken");
-
         return response;
     }
 

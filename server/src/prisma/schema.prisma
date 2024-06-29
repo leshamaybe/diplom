@@ -8,8 +8,8 @@ datasource db {
 }
 
 model User {
-  id               Int               @id @default(autoincrement())
-  username         String            @unique
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
   password         String
   email            String?
   sortName         String?
@@ -20,17 +20,20 @@ model User {
   settings         UserSettings?
   profile          Profile?
   reactions        Reaction[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime?         @updatedAt
+  createdGroups    Group[]            @relation("UserCreatedGroups")
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime?          @updatedAt
 }
 
 model Profile {
-  id        Int     @id @default(autoincrement())
-  user_id   Int     @unique
-  user      User    @relation(fields: [user_id], references: [id])
-  bio       String?
-  avatarUrl String?
-  phone     String?
+  id          Int     @id @default(autoincrement())
+  user_id     Int     @unique
+  user        User    @relation(fields: [user_id], references: [id])
+  name        String
+  bio         String?
+  avatarUrl   String?
+  displayName String?
+  phone       String? @default("Не указан")
 }
 
 model UserSettings {
@@ -45,15 +48,17 @@ model UserSettings {
 }
 
 model Conversation {
-  id               Int       @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   messages         Message[]
-  latestMessage_id Int?      @unique
-  latestMessage    Message?  @relation(name: "latestConversationMessage", fields: [latestMessage_id], references: [id])
-  isGroup          Boolean   @default(false)
+  latestMessage_id Int?               @unique
+  latestMessage    Message?           @relation(name: "latestConversationMessage", fields: [latestMessage_id], references: [id])
+  isGroup          Boolean            @default(false)
+  group_id         Int?               @unique
+  group            Group?             @relation(fields: [group_id], references: [id])
   roomName         String?
   users            UserConversation[]
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime? @updatedAt
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime?          @updatedAt
 }
 
 model UserConversation {
@@ -68,12 +73,15 @@ model UserConversation {
 }
 
 model Group {
-  id        Int               @id @default(autoincrement())
-  name      String
-  users     GroupMembership[]
-  messages  Message[]
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id           Int               @id @default(autoincrement())
+  name         String
+  users        GroupMembership[]
+  conversation Conversation?
+  createdById  Int
+  createdBy    User              @relation("UserCreatedGroups", fields: [createdById], references: [id])
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  Message      Message[]
 }
 
 model GroupMembership {
@@ -107,7 +115,7 @@ model Reaction {
   id        Int          @id @default(autoincrement())
   user      User         @relation(fields: [userId], references: [id])
   userId    Int
-  message   Message      @relation(fields: [messageId], references: [id])
+  message   Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
   messageId Int
   content   ReactionType @default(LIKE)
   createdAt DateTime     @default(now())

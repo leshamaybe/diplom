@@ -9,12 +9,11 @@ import useChatStore from "@/store/useChatStore";
 const ChatInput = () => {
     const [message, setMessage] = useState("");
     const { socket } = useSocketStore();
-    const { currentChat, userInfo } = useChatStore();
+    const { currentChat } = useChatStore();
 
     const handleSendMessage = () => {
         socket?.emit("send_message", {
             conversationId: currentChat?.id,
-            senderId: userInfo?.id,
             content: message,
             to: currentChat?.roomName,
         });

@@ -10,7 +10,7 @@ class AuthService {
     async registration(username, password, email) {
         const candidate = await prisma.user.findUnique({
             where: {
-                username: username,
+                name: username,
             },
         });
 
@@ -21,7 +21,7 @@ class AuthService {
 
         await prisma.user.create({
             data: {
-                username: username,
+                name: username,
                 password: encryptedPassword,
                 email: email,
                 settings: {
@@ -40,6 +40,13 @@ class AuthService {
                         },
                     },
                 },
+                profile: {
+                    create: {
+                        name: username,
+                        bio: "Дизайнер из Санкт-Петербурга, 23 года",
+                        displayName: username,
+                    },
+                },
             },
         });
 
@@ -49,7 +56,7 @@ class AuthService {
     async login(username, password) {
         const user = await prisma.user.findUnique({
             where: {
-                username: username,
+                name: username,
             },
             include: {
                 settings: true,
@@ -67,7 +74,7 @@ class AuthService {
 
         const tokens = await tokenService.createTokens({
             userId: user.id,
-            username: user.username,
+            username: user.name,
         });
 
         await tokenService.saveTokenToDatabase(user.id, tokens.refreshToken);
@@ -76,7 +83,7 @@ class AuthService {
             ...tokens,
             data: {
                 userInfo: {
-                    username: user.username,
+                    username: user.name,
                     email: user.email,
                     id: user.id,
                 },
@@ -92,13 +99,13 @@ class AuthService {
 
         const user = await prisma.user.findUnique({
             where: {
-                username: username,
+                name: username,
             },
         });
 
         const tokens = await tokenService.createTokens({
             userId: user.id,
-            username: user.username,
+            username: user.name,
         });
 
         await tokenService.updateTokenInDatabase(user.id, tokens.refreshToken);
@@ -107,7 +114,7 @@ class AuthService {
             ...tokens,
             data: {
                 userInfo: {
-                    username: user.username,
+                    username: user.name,
                     email: user.email,
                     id: user.id,
                 },

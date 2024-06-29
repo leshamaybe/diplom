@@ -1,9 +1,6 @@
 export let rooms = [];
 
 export const addRoom = (roomName, user) => {
-    user.username = user.username.trim().toLowerCase();
-    roomName = roomName.trim().toLowerCase();
-
     const roomIndex = getRoom(roomName);
 
     if (roomIndex === -1) {
@@ -16,7 +13,7 @@ function addUserToRoom({ id, userId, username, roomName }) {
     const roomIndex = getRoom(roomName);
 
     const user = { id, userId, username, roomName };
-    // console.log(user);
+
     if (roomIndex !== -1) {
         rooms[roomIndex].users.push(user);
     } else {
@@ -32,7 +29,7 @@ function removeUserFromRoom(id, roomName) {
         );
     }
 
-    if (rooms[roomIndex].users.length === 0) {
+    if (roomIndex !== -1 && rooms[roomIndex].users.length === 0) {
         removeRoom(roomName);
     }
 }
@@ -70,11 +67,13 @@ export const removeUser = (id) => {
 };
 
 export const getUser = (id) => {
-    return rooms.find((user) => user.id === id);
+    return rooms.find((room) => {
+        return room.users.find((user) => user.id === id);
+    });
 };
 
-export const getUsersInRoom = (room) => {
-    return rooms.filter((user) => user.room === room);
+export const getUsersInRoom = (roomName) => {
+    return rooms.find((room) => room.name === roomName);
 };
 
 const removeUserFromAllRooms = (id) => {

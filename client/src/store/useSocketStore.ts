@@ -24,17 +24,18 @@ const useSocketStore = create<Store>()(
                     extraHeaders: {
                         authorization: `bearer ${getCookie("accessToken")}`,
                     },
-                    addTrailingSlash: false,
                     autoConnect: false,
                 });
-
-                socket.connect();
 
                 set({ socket });
 
                 socket
+                    .connect()
                     .on("connect", () => {
-                        console.log("Socket connected!", socket.id);
+                        if (!socket.recovered) {
+                            console.log("Socket connected!", socket.id);
+                            socket.emit("join");
+                        }
                     })
                     .on("disconnect", () => {
                         console.log("Socket disconnected!");

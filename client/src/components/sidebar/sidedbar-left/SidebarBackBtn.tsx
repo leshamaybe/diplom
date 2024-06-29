@@ -3,10 +3,10 @@ import { ArrowLeft } from "lucide-react";
 
 const SidebarBackBtn = ({
     className,
-    handler,
+    onClick,
 }: {
     className?: string;
-    handler?: () => void;
+    onClick?: any;
 }) => {
     return (
         <button
@@ -14,7 +14,7 @@ const SidebarBackBtn = ({
                 "flex items-center justify-center min-w-[36px] h-[36px] rounded-full hover:bg-gray-100 focus-visible:outline-none",
                 className
             )}
-            onClick={handler}
+            onClick={onClick}
         >
             <ArrowLeft />
         </button>

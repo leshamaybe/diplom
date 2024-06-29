@@ -1,13 +1,16 @@
-export interface IUser {
+import { IMessage } from "./chat.types";
+
+export type IUser = {
     username: string;
     id: number;
     email?: string;
     first_name?: string;
     phone?: string;
+    lastMessage: IMessage;
     sortName?: string;
     updatedAt: string;
-    createddAt: string;
-}
+    createdAt: string;
+};
 
 export interface UserInfo {
     username: string;

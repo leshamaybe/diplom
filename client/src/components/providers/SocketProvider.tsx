@@ -5,14 +5,13 @@ import useSocketStore from "@/store/useSocketStore";
 import useAuthStore from "@/store/useAuthStore";
 
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-    const { connect, disconnect } = useSocketStore();
+    const { socket, connect, disconnect } = useSocketStore();
     const { isAuth } = useAuthStore();
 
     useEffect(() => {
         window.addEventListener("beforeunload", disconnect);
         return () => {
             window.removeEventListener("beforeunload", disconnect);
-            disconnect();
         };
     }, [disconnect]);
 
@@ -20,6 +19,10 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         if (isAuth) {
             connect();
         }
+
+        return () => {
+            socket?.off("connect");
+        };
     }, [connect, isAuth]);
 
     return <>{children}</>;

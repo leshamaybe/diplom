@@ -1,37 +1,42 @@
-const users = [];
+class UserManager {
+    constructor() {
+        this.users = [];
+    }
 
-const addUser = ({ id, userId, username, room }) => {
-    username = username.trim().toLowerCase();
-    room = room.trim().toLowerCase();
+    addUser({ id, userId, username, room }) {
+        username = username.toLowerCase();
 
-    const existingUser = users.find(
-        (user) => user.room === room && user.username === username
-    );
+        const existingUser = this.users.find(
+            (user) => user.room === room && user.username === username
+        );
 
-    if (!username || !room) return { error: "Username and room are required." };
-    if (existingUser) return { error: "Username already exists." };
+        if (!username) return { error: "Username and room are required." };
+        if (existingUser) return { error: "Username already exists." };
 
-    const user = { id, userId, username, room };
+        const user = { id, userId, username, room };
 
-    users.push(user);
+        this.users.push(user);
 
-    return { user };
-};
+        return user;
+    }
 
-const removeUser = (id) => {
-    const index = users.findIndex((user) => user.id === id);
+    removeUser(id) {
+        const index = this.users.findIndex((user) => user.id === id);
 
-    if (index !== -1) return users.splice(index, 1)[0];
-};
+        if (index !== -1) return this.users.splice(index, 1)[0];
+    }
 
-const getUser = (id) => users.find((user) => user.id === id);
+    getUser(id) {
+        return this.users.find((user) => user.id === id);
+    }
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+    getUsers() {
+        return this.users;
+    }
 
-export default {
-    users,
-    addUser,
-    removeUser,
-    getUser,
-    getUsersInRoom,
-};
+    getUsersInRoom(room) {
+        return this.users.filter((user) => user.room === room);
+    }
+}
+
+export default new UserManager();
