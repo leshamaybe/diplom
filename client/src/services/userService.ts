@@ -14,4 +14,15 @@ export default class UserService {
     static async getProfile(): Promise<AxiosResponse> {
         return api.get(`/api/user/profile`);
     }
+    static async changeProfile(formData: any): Promise<AxiosResponse> {
+        return api.post(
+            `/api/user/changeProfile`,
+            { formData },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    }
 }

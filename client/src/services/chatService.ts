@@ -18,8 +18,12 @@ export default class ChatService {
     static async deleteMessage(id: number): Promise<AxiosResponse> {
         return api.post(`/api/message/delete`, { messageId: id });
     }
-    static async createGroup(name: string, users: any): Promise<AxiosResponse> {
-        return api.post(`/api/createGroup`, { name, users });
+    static async createGroup(
+        name: string,
+        users: any,
+        avatarUrl: any
+    ): Promise<AxiosResponse> {
+        return api.post(`/api/createGroup`, { name, users, avatarUrl });
     }
     static async reactOnMessage(mid: number): Promise<AxiosResponse> {
         return api.post(`/api/message/reactOnMessage`, { mid });

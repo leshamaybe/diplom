@@ -59,7 +59,7 @@ const page = ({ params }: { params: { id: string } }) => {
 
     return (
         <main className="relative grow flex flex-col bg-pattern-1">
-            <ChatHeader profile={conversation?.profile} />
+            <ChatHeader data={conversation} />
 
             {isError ? (
                 <div className="m-auto">

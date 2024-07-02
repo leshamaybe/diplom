@@ -32,7 +32,7 @@ const SearchList = ({ searchTerm }: { searchTerm: string }) => {
 
     return (
         <div>
-            {data?.map((user: IUser) => {
+            {data?.map((user: any) => {
                 return (
                     <Link key={user?.id} href={`/dashboard/${user.id}`}>
                         <div
@@ -40,7 +40,10 @@ const SearchList = ({ searchTerm }: { searchTerm: string }) => {
                                 "relative flex flex-col justify-center w-full min-h-16 rounded-lg pl-[70px] hover:bg-[rgba(112,117,121,0.08)] transition-colors duration-75"
                             )}
                         >
-                            <Avatar className="absolute" username={user.name} />
+                            <Avatar
+                                className="absolute"
+                                username={user?.name}
+                            />
                             <div className="w-full">{user?.name}</div>
                         </div>
                     </Link>

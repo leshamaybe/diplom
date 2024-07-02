@@ -80,7 +80,7 @@ const page = () => {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input type="password" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                         Минимальная длина - 6.

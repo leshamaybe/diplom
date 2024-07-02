@@ -10,6 +10,7 @@ const SidebarBackBtn = ({
 }) => {
     return (
         <button
+            type="button"
             className={cn(
                 "flex items-center justify-center min-w-[36px] h-[36px] rounded-full hover:bg-gray-100 focus-visible:outline-none",
                 className

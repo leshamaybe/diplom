@@ -23,6 +23,23 @@ class UsersController {
             next(error);
         }
     }
+    async changeUserProfile(req, res, next) {
+        try {
+            const { formData } = req.body;
+            const { refreshToken: token } = req.cookies;
+
+            const { userId } = jwt.verify(
+                token,
+                process.env.JWT_REFRESH_SECRET
+            );
+
+            const profile = await UserService.changeProfile(formData, userId);
+
+            return res.status(200).json(profile);
+        } catch (error) {
+            next(error);
+        }
+    }
     async getAllUsers(req, res) {
         try {
             const users = await prisma.user.findMany();

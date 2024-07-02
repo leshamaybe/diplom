@@ -50,7 +50,7 @@ class ChatController {
 
     async createGroup(req, res, next) {
         try {
-            const { name, users } = req.body;
+            const { name, users, avatarUrl } = req.body;
             const { refreshToken: token } = req.cookies;
 
             const { userId } = jwt.verify(
@@ -58,7 +58,12 @@ class ChatController {
                 process.env.JWT_REFRESH_SECRET
             );
 
-            const group = await ChatService.createGroup(name, users, userId);
+            const group = await ChatService.createGroup(
+                name,
+                users,
+                userId,
+                avatarUrl
+            );
 
             return res.status(201).json(group);
         } catch (error) {

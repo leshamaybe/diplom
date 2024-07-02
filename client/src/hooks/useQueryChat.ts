@@ -43,9 +43,16 @@ export const useCreateGroup = () => {
     const queryClient = useQueryClient();
 
     const { mutate: createGroup } = useMutation({
-        mutationFn: ({ name, users }: { name: string; users: any }) =>
-            ChatService.createGroup(name, users),
-        onSuccess: () => {
+        mutationFn: ({
+            name,
+            users,
+            avatarUrl,
+        }: {
+            name: string;
+            users: any;
+            avatarUrl: any;
+        }) => ChatService.createGroup(name, users, avatarUrl),
+        onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["usersList"] });
         },
     });

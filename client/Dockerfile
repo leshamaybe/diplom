@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Устанавливаем рабочую директорию
-WORKDIR /app
+WORKDIR /src
 
 # Копируем package.json и package-lock.json
 COPY package*.json ./
@@ -13,8 +13,11 @@ RUN npm install
 # Копируем весь проект
 COPY . .
 
-# Команда для запуска приложения в режиме разработки
-CMD ["npm", "run", "dev"]
+# Строим приложение
+RUN npm run build
+
+# Команда для запуска приложения
+CMD ["npm", "run", "start"]
 
 # Указываем порт
-EXPOSE 5050
+EXPOSE 3001

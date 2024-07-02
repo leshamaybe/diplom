@@ -6,16 +6,20 @@ import SidebarHeader from "../../SidebarHeader";
 import { ScreenTypes } from "../../sidedbar-left/Sidebar";
 import SidebarBackBtn from "../../sidedbar-left/SidebarBackBtn";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import useSidebarStore from "@/store/useGroupStore";
 import Avatar from "@/components/Avatar";
 import { Button } from "@/components/ui/button";
 import { useCreateGroup } from "@/hooks/useQueryChat";
+import { toast } from "sonner";
+import dayjs from "dayjs";
+import { convert2base64 } from "@/lib/utils";
 
 const SecondScreen = ({ setScreen }: { setScreen: any }) => {
-    const [image, setImage] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState("");
+    const [image, setImage] = useState<any>("");
     const [groupName, setGroupName] = useState<string>("");
 
     const { selectedUsers, reset } = useSidebarStore();
@@ -24,12 +28,23 @@ const SecondScreen = ({ setScreen }: { setScreen: any }) => {
 
     const onImageChange = (event: any) => {
         if (event.target.files && event.target.files[0]) {
-            setImage(URL.createObjectURL(event.target.files[0]));
+            const file = event.target.files[0];
+            setImagePreview(URL.createObjectURL(file));
+            convert2base64(file, setImage);
         }
     };
 
     const handleCreateGroup = () => {
-        createGroup({ name: groupName, users: selectedUsers });
+        createGroup({
+            name: groupName,
+            users: selectedUsers,
+            avatarUrl: image,
+        });
+        toast("Группа успешно создана", {
+            description: dayjs().format("DD/MM/YYYY HH:mm"),
+        });
+
+        setScreen(ScreenTypes.Main);
     };
 
     const usersCount =
@@ -63,10 +78,10 @@ const SecondScreen = ({ setScreen }: { setScreen: any }) => {
                             type="file"
                             accept="image/*, application/pdf"
                         />
-                        {image ? (
+                        {imagePreview ? (
                             <Image
                                 className="absolute z-0 object-cover w-full h-full"
-                                src={image}
+                                src={imagePreview}
                                 alt="img"
                                 width={120}
                                 height={50}
@@ -78,6 +93,7 @@ const SecondScreen = ({ setScreen }: { setScreen: any }) => {
                     <div className="grid w-full items-center gap-1.5 px-3">
                         <Label htmlFor="groupName">Название группы</Label>
                         <Input
+                            required
                             onChange={(e) => setGroupName(e.target.value)}
                             type="text"
                             id="groupName"

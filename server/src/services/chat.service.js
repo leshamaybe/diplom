@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 
 class ChatService {
     async startConversation(recipient, me) {
+        const isGroup = String(recipient).split("")[0] == "-";
+
         recipient = parseInt(recipient);
         me = parseInt(me);
 
@@ -42,27 +44,24 @@ class ChatService {
             });
 
             // Если личная переписка не найдена, проверяем наличие групповой переписки
-            if (!conversation) {
+            if (!conversation || isGroup) {
+                let groupId = String(recipient).split("")[1];
+                groupId = parseInt(groupId);
+
                 conversation = await prisma.conversation.findFirst({
                     where: {
                         isGroup: true,
-                        group_id: recipient,
+                        group_id: groupId,
                     },
                     select: {
                         id: true,
                         roomName: true,
                         isGroup: true,
                         group_id: true,
-                        messages: {
-                            orderBy: {
-                                createdAt: "asc",
-                            },
+                        group: {
                             select: {
-                                id: true,
-                                content: true,
-                                createdAt: true,
-                                sender_id: true,
-                                reactions: true,
+                                profile: true,
+                                createdBy: true,
                             },
                         },
                         users: {
@@ -75,6 +74,18 @@ class ChatService {
                                         profile: true,
                                     },
                                 },
+                            },
+                        },
+                        messages: {
+                            orderBy: {
+                                createdAt: "asc",
+                            },
+                            select: {
+                                id: true,
+                                content: true,
+                                createdAt: true,
+                                sender_id: true,
+                                reactions: true,
                             },
                         },
                     },
@@ -93,14 +104,15 @@ class ChatService {
                     },
                 });
             } else {
-                let group = await prisma.group.findUnique({
-                    where: {
-                        id: conversation.group_id,
-                    },
-                });
-                profile = {
-                    name: group.name,
-                };
+                // let group = await prisma.group.findUnique({
+                //     where: {
+                //         id: conversation.group_id,
+                //     },
+                //     select: {
+                //         profile: true,
+                //     },
+                // });
+                // profile = group;
             }
 
             return {
@@ -137,22 +149,26 @@ class ChatService {
         return conversation;
     }
 
-    async createGroup(name, users, me) {
+    async createGroup(name, users, me, avatarUrl) {
         me = parseInt(me);
 
         users.push({ profile: { id: me } });
 
-        console.log(name);
-
         const group = await prisma.group.create({
             data: {
-                name: name,
                 users: {
                     create: users.map((user) => ({
                         user: {
                             connect: { id: user.profile.id },
                         },
                     })),
+                },
+                profile: {
+                    create: {
+                        name: name,
+                        bio: "",
+                        avatarUrl: avatarUrl,
+                    },
                 },
                 conversation: {
                     create: {
@@ -166,6 +182,9 @@ class ChatService {
                         },
                         roomName: name,
                     },
+                },
+                createdBy: {
+                    connect: { id: me },
                 },
             },
         });
@@ -194,6 +213,11 @@ class ChatService {
                 id: { in: conversationIds },
             },
             include: {
+                group: {
+                    select: {
+                        profile: true,
+                    },
+                },
                 users: {
                     include: {
                         user: {
@@ -202,6 +226,7 @@ class ChatService {
                                 profile: {
                                     select: {
                                         name: true,
+                                        avatarUrl: true,
                                     },
                                 },
                             },
@@ -236,6 +261,7 @@ class ChatService {
                     profile: {
                         id: interlocutor.id,
                         name: interlocutor.profile.name,
+                        avatarUrl: interlocutor.profile.avatarUrl,
                     },
                 };
             } else {
@@ -246,6 +272,7 @@ class ChatService {
                     profile: {
                         id: conversation.group_id,
                         name: conversation.roomName,
+                        avatarUrl: conversation.group.profile.avatarUrl,
                     },
                 };
             }

@@ -1,6 +1,7 @@
 import Sidebar from "@/components/sidebar/sidedbar-left/Sidebar";
 import AuthProvider from "@/components/providers/AuthProvider";
 import SocketProvider from "@/components/providers/SocketProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Layout({
     children,
@@ -14,6 +15,7 @@ export default function Layout({
                     <AuthProvider>
                         <Sidebar />
                         {children}
+                        <Toaster />
                     </AuthProvider>
                 </SocketProvider>
             </div>

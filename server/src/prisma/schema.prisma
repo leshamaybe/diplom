@@ -30,6 +30,8 @@ model Profile {
   user_id     Int     @unique
   user        User    @relation(fields: [user_id], references: [id])
   name        String
+  firstName   String?
+  lastName    String?
   bio         String?
   avatarUrl   String?
   displayName String?
@@ -74,14 +76,26 @@ model UserConversation {
 
 model Group {
   id           Int               @id @default(autoincrement())
-  name         String
   users        GroupMembership[]
   conversation Conversation?
   createdById  Int
   createdBy    User              @relation("UserCreatedGroups", fields: [createdById], references: [id])
+  profile      GroupProfile?
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   Message      Message[]
+}
+
+model GroupProfile {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bio       String?
+  avatarUrl String?
+  admins    String[]
+  group_id  Int      @unique
+  group     Group    @relation(fields: [group_id], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model GroupMembership {

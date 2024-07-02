@@ -40,7 +40,7 @@ const FirstScreen = ({ setScreen }: { setScreen: any }) => {
             </SidebarHeader>
             <Separator />
             <div className="px-2 py-4 bg-background shadow-sm">
-                {users.map((user: IUser) => {
+                {users.map((user: any) => {
                     if (!user?.isGroup) {
                         return (
                             <div
