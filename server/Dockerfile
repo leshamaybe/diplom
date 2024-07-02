@@ -13,6 +13,8 @@ RUN npm install
 # Копируем весь проект
 COPY . .
 
+RUN npx prisma migrate deploy
+
 # Команда для запуска приложения в режиме разработки
 CMD ["npm", "run", "dev"]
 
