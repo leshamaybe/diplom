@@ -18,16 +18,16 @@ services:
             - "5050:5050"
         environment:
             - NODE_ENV=development
-            - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+            - DATABASE_URL=postgresql://gen_user:%5C%5C_)Z(l%5CD%26_5Xb@192.168.0.4:5432/default_db
         depends_on:
             - db
 
     db:
         image: postgres:14
         environment:
-            POSTGRES_USER: user
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: mydatabase
+            POSTGRES_USER: gen_user
+            POSTGRES_PASSWORD: %5C%5C_)Z(l%5CD%26_5Xb
+            POSTGRES_DB: default_db
         volumes:
             - postgres_data:/var/lib/postgresql/data
 
