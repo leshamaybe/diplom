@@ -18,7 +18,7 @@ services:
             - "5050:5050"
         environment:
             - NODE_ENV=development
-            - DATABASE_URL=postgresql://gen_user:%5C%5C_)Z(l%5CD%26_5Xb@192.168.0.4:5432/default_db
+            - DATABASE_URL=postgresql://gen_user:%5C%5C_)Z(l%5CD%26_5Xb@147.45.107.60:5432/default_db
         depends_on:
             - db
 
