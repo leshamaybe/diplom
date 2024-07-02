@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 5050;
 const server = createServer(app);
 const corsConfig = {
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "http://leshamaybe-diplom-f95c.twc1.net:3001",
     credentials: true,
 };
 
