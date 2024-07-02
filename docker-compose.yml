@@ -3,22 +3,22 @@ version: "3"
 services:
     client:
         build:
-            context: .
-            dockerfile: Dockerfile.client
+            context: ./client
+            dockerfile: Dockerfile
         ports:
-            - "3000:3000"
+            - "3001:3001"
         environment:
             - NODE_ENV=production
 
     server:
         build:
-            context: .
-            dockerfile: Dockerfile.server
+            context: ./server
+            dockerfile: Dockerfile
         ports:
-            - "4000:4000"
+            - "5050:5050"
         environment:
             - NODE_ENV=development
-            - DATABASE_URL=postgresql://postgres:alekseyVV9436@localhost:5432/chat_db?schema=public
+            - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
         depends_on:
             - db
 
